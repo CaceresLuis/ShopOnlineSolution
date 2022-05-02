@@ -27,9 +27,8 @@ namespace ShopOnline.Api.Controllers
             try
             {
                 IEnumerable<Product> product = await _producRepository.GetItems();
-                IEnumerable<ProductCategory> productCategories = await _producRepository.GetCategories();
 
-                if (product == null || productCategories == null)
+                if (product == null)
                     return NotFound();
 
                 IEnumerable<ProductDto> productDto = _mapper.Map<IEnumerable<ProductDto>>(product);
@@ -43,11 +42,23 @@ namespace ShopOnline.Api.Controllers
             }
         }
 
-        // GET api/<ProductController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<ProductDto>> Get(int id)
         {
-            return "value";
+            try
+            {
+                Product product = await _producRepository.GetItem(id);
+                if (product == null)
+                    return NotFound();
+
+                ProductDto productDto = _mapper.Map<ProductDto>(product);
+
+                return Ok (productDto);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error retriving data from the database");
+            }
         }
 
         // POST api/<ProductController>
