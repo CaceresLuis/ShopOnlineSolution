@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using ShopOnline.Api.Entities;
-using ShopOnline.Api.Repositories.Contracts;
 using ShopOnline.Models.Dtos;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using ShopOnline.Api.Entities;
+using Microsoft.AspNetCore.Mvc;
+using ShopOnline.Api.Repositories.Contracts;
 
 namespace ShopOnline.Api.Controllers
 {
@@ -26,14 +24,12 @@ namespace ShopOnline.Api.Controllers
         {
             try
             {
-                IEnumerable<Product> product = await _producRepository.GetItems();
+                IEnumerable<ProductDto> product = await _producRepository.GetItems();
 
                 if (product == null)
                     return NotFound();
 
-                IEnumerable<ProductDto> productDto = _mapper.Map<IEnumerable<ProductDto>>(product);
-
-                return Ok(productDto);
+                return Ok(product);
 
             }
             catch (Exception)
@@ -47,13 +43,11 @@ namespace ShopOnline.Api.Controllers
         {
             try
             {
-                Product product = await _producRepository.GetItem(id);
+                ProductDto product = await _producRepository.GetItem(id);
                 if (product == null)
                     return NotFound();
 
-                ProductDto productDto = _mapper.Map<ProductDto>(product);
-
-                return Ok (productDto);
+                return Ok (product);
             }
             catch (Exception)
             {

@@ -1,8 +1,8 @@
 using ShopOnline.Api.Data;
+using Microsoft.Net.Http.Headers;
 using ShopOnline.Api.Repositories;
 using Microsoft.EntityFrameworkCore;
 using ShopOnline.Api.Repositories.Contracts;
-using Microsoft.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +20,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 //Repositories
 builder.Services.AddScoped<IProducRepository, ProducRepository>();
+builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

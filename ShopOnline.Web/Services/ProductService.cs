@@ -18,21 +18,18 @@ namespace ShopOnline.Web.Services
         {
             try
             {
-                var response = await _httpClient.GetAsync("api/Product");
-                if (response.IsSuccessStatusCode)
+                HttpResponseMessage? response = await _httpClient.GetAsync("api/Product");
+                if (!response.IsSuccessStatusCode)
                 {
-                    if (response.StatusCode == HttpStatusCode.NoContent)
-                    {
-                        return Enumerable.Empty<ProductDto>();
-                    }
-
-                    return await response.Content.ReadFromJsonAsync<IEnumerable<ProductDto>>();
-                }
-                else
-                {
-                    var message = await response.Content.ReadAsStringAsync();
+                    string? message = await response.Content.ReadAsStringAsync();
                     throw new Exception(message);
                 }
+                if (response.StatusCode == HttpStatusCode.NoContent)
+                {
+                    return Enumerable.Empty<ProductDto>();
+                }
+
+                return await response.Content.ReadFromJsonAsync<IEnumerable<ProductDto>>();
             }
             catch (Exception)
             {
@@ -45,21 +42,19 @@ namespace ShopOnline.Web.Services
         {
             try
             {
-                var response = await _httpClient.GetAsync($"api/Product/{id}");
-                if (response.IsSuccessStatusCode)
+                HttpResponseMessage? response = await _httpClient.GetAsync($"api/Product/{id}");
+                if (!response.IsSuccessStatusCode)
                 {
-                    if (response.StatusCode == HttpStatusCode.NoContent)
-                    {
-                        return default(ProductDto);
-                    }
-
-                    return await response.Content.ReadFromJsonAsync<ProductDto>();
-                }
-                else
-                {
-                    var message = await response.Content.ReadAsStringAsync();
+                    string? message = await response.Content.ReadAsStringAsync();
                     throw new Exception(message);
                 }
+
+                if (response.StatusCode == HttpStatusCode.NoContent)
+                {
+                    return default(ProductDto);
+                }
+
+                return await response.Content.ReadFromJsonAsync<ProductDto>();
             }
             catch (Exception)
             {
