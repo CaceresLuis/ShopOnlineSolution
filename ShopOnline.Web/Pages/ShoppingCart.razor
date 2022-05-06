@@ -12,7 +12,9 @@ else if(ErrorMessenger != null)
 else
 {
     <h3 class="mb-5">Shopping Cart</h3>
-    <div class="row mb-5">
+    @if(ShoppingCartItems.Count() > 0)
+    {
+            <div class="row mb-5">
         <div class="col-md-9">
             @foreach (var item in ShoppingCartItems)
            {
@@ -25,8 +27,9 @@ else
                         <div class="mb-4">@item.ProductDescription</div>
                         <span>
                             Price: &#36; <b>@item.Price.ToString()</b>
-                            <input type="number" @bind="@item.Qty">
-                            <button class="btn btn-info"
+                            <input @oninput="() => UpdateQty_Input(item.Id)"
+                            type="number" @bind="@item.Qty">
+                            <button data-itemId="@item.Id" class="btn btn-info btn-sm update-qty"
                                 @onclick="(() => UpdateQtyCartItem_Click(item.Id, item.Qty))">
                                 Update Qty
                             </button>
@@ -40,5 +43,20 @@ else
                </div>
            }
         </div>
-    </div>
+        <div class="col-md-3">
+            <h5>Cart Summary</h5>
+            <div class="mt-2">
+                <div>total - &#36; (@TotalQuantity items) @TotalPrice</div>
+                <a href="#" class="btn btn-success">
+                    <span class="oi oi-credit-card"></span> &#36; Proceed to chechout
+                </a>
+            </div>
+        </div>
+    </div>        
+    }
+        else
+    {
+        <h4>There are currently no items in your shopping cart</h4>
+    }
+
 }
