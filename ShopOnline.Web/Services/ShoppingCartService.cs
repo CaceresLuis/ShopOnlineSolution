@@ -1,7 +1,7 @@
 ﻿using System.Net;
-using System.Net.Http.Json;
 using System.Text;
 using Newtonsoft.Json;
+using System.Net.Http.Json;
 using ShopOnline.Models.Dtos;
 using ShopOnline.Web.Services.Contracts;
 
@@ -10,6 +10,7 @@ namespace ShopOnline.Web.Services
     public class ShoppingCartService : IShoppingCartService
     {
         private readonly HttpClient _httpClient;
+        public event Action<int> OnshoppingCartChanged;
 
         public ShoppingCartService(HttpClient httpClient)
         {
@@ -81,6 +82,12 @@ namespace ShopOnline.Web.Services
 
                 throw;
             }
+        }
+
+        public void RaiseEventOnShoppingCartChanget(int totalQty)
+        {
+            if(OnshoppingCartChanged != null)
+                OnshoppingCartChanged.Invoke(totalQty);
         }
 
         public async Task<bool> DeleteItem(int id)

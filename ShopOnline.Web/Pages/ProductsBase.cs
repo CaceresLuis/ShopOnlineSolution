@@ -4,16 +4,21 @@ using ShopOnline.Web.Services.Contracts;
 
 namespace ShopOnline.Web.Pages
 {
-    public class ProductsBase:ComponentBase
+    public class ProductsBase : ComponentBase
     {
         [Inject]
         public IProductService ProductService { get; set; }
-
+        [Inject]
+        public IShoppingCartService ShoppingCartService { get; set; }
         public IEnumerable<ProductDto> Products { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
             Products = await ProductService.GetItems();
+            List<CartItemDto>? shoppingCartItems = await ShoppingCartService.GetItems(1);
+            int totalQty = shoppingCartItems.Sum(i => i.Qty);
+
+            ShoppingCartService.RaiseEventOnShoppingCartChanget(totalQty);
         }
 
         protected IOrderedEnumerable<IGrouping<int, ProductDto>> GetGroudProductsBycategory()
